@@ -37,7 +37,7 @@ export default function Cuisine() {
     const ratingAverage = (reviews) => {
         let average = 0.00;
         reviews.map(review => average += review.rating);
-        if(reviews.length) return (average / reviews.length);
+        if(reviews.length) return Number(average / reviews.length).toFixed(2);
         return "-"
        
     }

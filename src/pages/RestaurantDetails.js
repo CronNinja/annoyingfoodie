@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import ReviewList from '../components/ReviewList';
+import ModalIt from '../components/ModalIt';
+import Button from 'react-bootstrap/Button';
 
 const RESTAURANT = gql`
     query GetRestaurant($id: ID!) {
@@ -14,6 +16,7 @@ const RESTAURANT = gql`
                 id
             },
             reviews {
+                id,
                 title,
                 rating,
                 body,
@@ -38,7 +41,10 @@ export default function RestaurantDetails({ user }) {
             setRestaurant(data.restaurant);
         }
     }, [data]);
+    const [show, setShow] = useState(false);
     
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     if(loading) return <p>Loading...</p>
     if(error) return <p>Error :(</p>
 
@@ -49,14 +55,11 @@ export default function RestaurantDetails({ user }) {
         else if(reviews[0]) {
             let average = 0.00;
             reviews.map(review => average += review.rating);
-            return (average / reviews.length);
+            return Number(average / reviews.length).toFixed(2);
         }
         return "-";
     }
 
-    const addReview = () => {
-        console.log(restaurant.id);
-    }
     return (
         <div>
             { restaurant &&
@@ -73,11 +76,12 @@ export default function RestaurantDetails({ user }) {
                     {
                         Object.keys(user).length !== 0 &&
                             <>
-                                <button className="btn" onClick={ addReview }>Add Review</button>
+                                <Button onClick={ handleShow }>Create New Review</Button>
+                                <ModalIt show={ show } handleClose={ handleClose } options={ ["Create New Review", "createReview", restaurant.id ]}/>
                             </>
                     }
                 </div>
-                <ReviewList reviews={ restaurant.reviews } />
+                <ReviewList reviews={ restaurant.reviews } user={ user } />
             </>
             }
         </div>

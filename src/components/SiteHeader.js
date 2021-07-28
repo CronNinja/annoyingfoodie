@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const CUISINES = gql`
   query GetCuisines {
@@ -32,7 +33,7 @@ export default function SiteHeader({ user, setUser, removeCookie }) {
               Welcome, { user.username }
             </li>
             <li>
-              <button onClick={ logout } className="btn">Log out</button>
+              <Button onClick={ logout }>Log out</Button>
             </li>
           </>
         }
